@@ -1,33 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+
+const fetchToken = async () => {
+  try {
+    const result = await fetch('https://zoom.us/oauth/token', {
+      mode: 'cors',
+      method: 'POST',
+      body: JSON.stringify({
+        grant_type: "account_credentials",
+        account_id: import.meta.env.VITE_ACCOUNT_ID,
+      }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": `Basic ${btoa(import.meta.env.VITE_CLIENT_ID)}:${import.meta.env.VITE_CLIENT_SECRET}`,
+        "Access-Control-Allow-Origin": "*",
+      }
+    })
+    const data = result.json()
+    console.log(data)
+  } catch (error) {
+    if(error instanceof Error) {
+      throw error
+    }
+  }
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await fetchToken()
+      return token
+    }
+    const token = getToken()
+    console.log("token", token)
+  }, [])
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
     </>
   )
 }
