@@ -14,14 +14,12 @@ export default function Home() {
   const handleClickToken = async () => {
     const res = await fetch("/api/get-zoom-token");
     const data = await res.json();
-    console.log("handleClickToken", data);
     setResponse(data);
   };
 
   const handleClickRecordList = async () => {
     const res = await fetch("/api/me");
     const data = await res.json();
-    console.log("handleClickRecordList", data);
     setResponse(data);
   };
 
@@ -50,8 +48,10 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="p-10 flex-1 border-2 h-screen w-[50%] break-words overflow-auto">
-        {<JsonFormatter json={response} tabWith={4} jsonStyle={jsonStyle} />}
+      <div className="p-10 flex-1 border-2 h-[calc(100%_-_3.5rem)] w-[50%] break-words overflow-auto">
+        {response && (
+          <JsonFormatter json={response} tabWith={4} jsonStyle={jsonStyle} />
+        )}
       </div>
     </main>
   );
